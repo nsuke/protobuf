@@ -218,7 +218,8 @@ GenerateSwappingCode(io::Printer* printer) const {
 void EnumOneofFieldGenerator::
 GenerateConstructorCode(io::Printer* printer) const {
   printer->Print(variables_,
-    "  $classname$_default_oneof_instance_->$name$_ = $default$;\n");
+    "  const_cast<$classname$OneofInstance*>("
+    "$classname$_default_oneof_instance_)->$name$_ = $default$;\n");
 }
 
 // ===================================================================

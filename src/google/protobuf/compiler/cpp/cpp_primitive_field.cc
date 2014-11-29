@@ -235,9 +235,9 @@ GenerateSwappingCode(io::Printer* printer) const {
 
 void PrimitiveOneofFieldGenerator::
 GenerateConstructorCode(io::Printer* printer) const {
-  printer->Print(
-      variables_,
-      "  $classname$_default_oneof_instance_->$name$_ = $default$;\n");
+  printer->Print(variables_,
+    "  const_cast<$classname$OneofInstance*>("
+    "$classname$_default_oneof_instance_)->$name$_ = $default$;\n");
 }
 
 void PrimitiveOneofFieldGenerator::

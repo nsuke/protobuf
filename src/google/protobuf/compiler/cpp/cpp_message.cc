@@ -1226,14 +1226,14 @@ GenerateDescriptorDeclarations(io::Printer* printer) {
       for (int j = 0; j < descriptor_->oneof_decl(i)->field_count(); j++) {
         const FieldDescriptor* field = descriptor_->oneof_decl(i)->field(j);
         printer->Print("  ");
-        if (IsStringOrMessage(field)) {
+        if (field->cpp_type() == FieldDescriptor::CPPTYPE_MESSAGE) {
           printer->Print("const ");
         }
         field_generators_.get(field).GeneratePrivateMembers(printer);
       }
     }
 
-    printer->Print("}* $name$_default_oneof_instance_ = NULL;\n",
+    printer->Print("} const* $name$_default_oneof_instance_ = NULL;\n",
                    "name", classname_);
   }
 
@@ -1860,7 +1860,8 @@ GenerateStructors(io::Printer* printer) {
          HasDescriptorMethods(descriptor_->file()))) {
       string name;
       if (field->containing_oneof()) {
-        name = classname_ + "_default_oneof_instance_->";
+        name = "const_cast<" + classname_ + "OneofInstance*>(" + classname_
+          + "_default_oneof_instance_)->";
       }
       name += FieldName(field);
       PrintHandlingOptionalStaticInitializers(
